@@ -4,6 +4,6 @@ bobaclient_srcs = [
 executable(
   'bobaclient',
   bobaclient_srcs,
-  dependencies: [],
+  dependencies: [curl_dep],
   install: true,
 )

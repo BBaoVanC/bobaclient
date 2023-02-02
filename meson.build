@@ -3,7 +3,10 @@ project(
   'cpp',
   version: '0.1.0',
   license: 'MIT',
+  default_options: ['cpp_std=c++17']
 )
+
+curl_dep = dependency('libcurl')
 
 include = include_directories('include')
 
