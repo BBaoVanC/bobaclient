@@ -5,6 +5,15 @@
 #include <curl/curl.h>
 
 namespace bobaclient {
+    class CurlException: public std::exception {
+    private:
+        std::string msg;
+    public:
+        CurlException(std::string const &msg);
+        // TODO: Fix this
+        const char *what() const throw() {return msg.c_str();}
+    };
+
     struct CurlResponse {
         long response_code;
         std::string data;
@@ -12,6 +21,7 @@ namespace bobaclient {
 
     class CurlWrapper {
     private:
+        // TODO: can/should this be a reference instead?
         CURL *curl;
     public:
         CurlWrapper();
