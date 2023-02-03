@@ -1,5 +1,5 @@
-#ifndef BOBACLIENT_CURL_HPP
-#define BOBACLIENT_CURL_HPP
+#ifndef LIBBOBACLIENT_CURL_HPP
+#define LIBBOBACLIENT_CURL_HPP
 
 #include <string>
 #include <curl/curl.h>
@@ -10,8 +10,8 @@ namespace bobaclient {
         std::string msg;
     public:
         CurlException(std::string const &msg);
-        // TODO: Fix this
-        const char *what() const throw() {return msg.c_str();}
+        // TODO: does this need to be virtual
+        const char *what() const noexcept;
     };
 
     struct CurlResponse {

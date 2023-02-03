@@ -5,7 +5,18 @@ bobaclient_srcs = [
 executable(
   'bobaclient',
   bobaclient_srcs,
-  dependencies: [curl_dep],
   include_directories: include,
+  dependencies: [curl_dep],
   install: true,
+)
+
+libbobaclient_srcs = [
+  'libbobaclient.cpp',
+]
+libbobaclient = shared_library(
+  'libbobaclient',
+  libbobaclient_srcs,
+  include_directories: include,
+  dependencies: [curl_dep],
+  install: true
 )

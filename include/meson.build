@@ -1,1 +1,1 @@
-#install_headers('libbobashare.h')
+install_headers('libbobaclient.hpp')
