@@ -1,24 +1,9 @@
 #include <iostream>
 #include <curl/curl.h>
-
-struct CurlWrapper {
-    CurlWrapper() {
-        curl = curl_easy_init();
-    }
-    ~CurlWrapper() {
-        curl_easy_cleanup(curl);
-    }
-    operator CURL*() {
-        return curl;
-    }
-private:
-    CURL *curl;
-};
+#include "curl.hpp"
 
 int main() {
-    std::clog << "Hello\n";
-
-    CurlWrapper curl;
+    bobaclient::CurlWrapper curl;
     std::string data;
     curl_easy_setopt(curl, CURLOPT_URL, "https://share.boba.best/api/v1/info/PJpmMIw7");
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &data);
