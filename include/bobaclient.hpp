@@ -4,6 +4,8 @@
 #include <string>
 #include <curl/curl.h>
 
+#include "types.hpp"
+
 namespace bobaclient {
     class CurlException: public std::exception {
     private:
@@ -14,11 +16,14 @@ namespace bobaclient {
     };
 
     class Bobaclient {
-        // TODO: replace CurlWrapper
-        Bobaclient();
-        ~Bobaclient();
     private:
         CURL *curl;
+    public:
+        Bobaclient();
+        ~Bobaclient();
+
+        // TODO: can these all be const functions
+        types::InfoResponse get_info(std::string const &url);
     };
 }
 
