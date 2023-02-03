@@ -24,7 +24,7 @@ int main() {
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &data);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, +[](char *ptr, size_t size, size_t nmemb, void *userdata) {
         auto output = static_cast<std::string *>(userdata);
-        output->append(static_cast<char *>(ptr), size * nmemb);
+        output->append(ptr, size * nmemb);
         return size * nmemb;
     });
     CURLcode res = curl_easy_perform(curl);
