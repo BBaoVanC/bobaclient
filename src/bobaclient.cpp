@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <curl/curl.h>
 #include "curl.hpp"
 
@@ -12,7 +13,7 @@ int main() {
         output->append(ptr, size * nmemb);
         return size * nmemb;
     });
-    CURLcode res = curl_easy_perform(curl);
+    const CURLcode res = curl_easy_perform(curl);
     if (res != CURLE_OK) {
         std::clog << "failed: " << curl_easy_strerror(res) << std::endl;
     }
