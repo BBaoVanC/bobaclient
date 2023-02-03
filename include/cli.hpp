@@ -1,0 +1,4 @@
+#ifndef BOBACLIENT_CLI_HPP
+#define BOBACLIENT_CLI_HPP
+
+#endif

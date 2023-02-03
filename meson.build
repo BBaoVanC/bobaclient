@@ -3,8 +3,10 @@ project(
   'cpp',
   version: '0.1.0',
   license: 'MIT',
-  default_options: ['cpp_std=c++17']
+  default_options: ['cpp_std=c++17'],
 )
+
+soversion = 1
 
 curl_dep = dependency('libcurl')
 
@@ -14,11 +16,11 @@ subdir('include')
 subdir('src')
 #subdir('test')
 
-#pkg_mod = import('pkgconfig')
-#pkg_mod.generate(
-#  libraries: libbobaclient,
-#  version: '0.1.0'
-#  name: 'libbobaclient',
-#  filebase: 'bobaclient',
-#  description: 'Library to interact with bobashare',
-#)
+pkg_mod = import('pkgconfig')
+pkg_mod.generate(
+  libraries: lib,
+  version: meson.project_version(),
+  name: 'libbobaclient',
+  filebase: 'bobaclient',
+  description: 'Library to interact with bobashare',
+)

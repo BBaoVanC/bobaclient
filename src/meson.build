@@ -1,22 +1,22 @@
-bobaclient_srcs = [
-  'bobaclient.cpp',
-  'curl.cpp',
+cli_srcs = [
+  'cli.cpp',
 ]
 executable(
   'bobaclient',
-  bobaclient_srcs,
+  cli_srcs,
   include_directories: include,
   dependencies: [curl_dep],
   install: true,
 )
 
-libbobaclient_srcs = [
-  'libbobaclient.cpp',
+lib_srcs = [
+  'bobaclient.cpp',
 ]
-libbobaclient = shared_library(
+lib = library(
   'libbobaclient',
-  libbobaclient_srcs,
+  lib_srcs,
+  soversion: soversion,
   include_directories: include,
   dependencies: [curl_dep],
-  install: true
+  install: true,
 )

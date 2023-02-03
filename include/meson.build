@@ -1,1 +1,4 @@
-install_headers('libbobaclient.hpp')
+install_headers(
+    'bobaclient.hpp',
+    subdir: 'bobaclient',
+)

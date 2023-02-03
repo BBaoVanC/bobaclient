@@ -1,20 +1,28 @@
-#include <iostream>
-#include <string>
-#include <curl/curl.h>
-#include "curl.hpp"
+#include "bobaclient.hpp"
 
 using namespace bobaclient;
 
-int main() {
-    CurlWrapper curl;
-    std::string data;
 
-    const CurlResponse resp = curl.get_url("https://share.boba.best/api/v1/info/PJpmMIw7");
-    std::clog << "data: " << resp.data << std::endl;
-    std::clog << "response code: " << resp.response_code << std::endl;
 
-    const CurlResponse abc = curl.get_url("htps://share.boba.best/api/v1/info/nfr");
-    std::clog << "data: " << abc.data << std::endl;
-
-    return 0;
+Bobaclient::Bobaclient() {
+    curl = curl_easy_init();
 }
+Bobaclient::~Bobaclient() {
+    curl_easy_cleanup(curl);
+}
+
+// CurlResponse CurlWrapper::get_url(std::string const &url) {
+//     CurlResponse response;
+//     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+//     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response.data);
+//     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, +[](char *ptr, size_t size, size_t nmemb, std::string &data) {
+//         data.append(ptr, size * nmemb);
+//         return size * nmemb;
+//     });
+//     const CURLcode res = curl_easy_perform(curl);
+//     if (res != CURLE_OK) {
+//         throw CurlException(curl_easy_strerror(res));
+//     }
+//     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response.response_code);
+//     return response;
+// }
