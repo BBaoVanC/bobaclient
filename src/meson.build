@@ -2,7 +2,7 @@ lib_srcs = [
   'bobaclient.cpp',
 ]
 lib = library(
-  'libbobaclient',
+  'bobaclient',
   lib_srcs,
   soversion: soversion,
   include_directories: include,
