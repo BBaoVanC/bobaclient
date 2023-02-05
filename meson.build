@@ -6,7 +6,7 @@ project(
   default_options: ['cpp_std=c++17'],
 )
 
-soversion = 1
+soversion = 0
 
 curl_dep = dependency('libcurl')
 
