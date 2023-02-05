@@ -1,9 +1,8 @@
 #include <iostream>
 #include <string>
-#include <curl/curl.h>
 
 #include "bobaclient.hpp"
-#include "cli.hpp"
+#include "main.hpp"
 
 using namespace cli;
 

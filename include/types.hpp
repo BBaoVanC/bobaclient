@@ -1,5 +1,5 @@
-#ifndef BOBACLIENT_TYPES_V1_HPP
-#define BOBACLIENT_TYPES_V1_HPP
+#ifndef BOBACLIENT_TYPES_HPP
+#define BOBACLIENT_TYPES_HPP
 
 #include <string>
 #include <chrono>
