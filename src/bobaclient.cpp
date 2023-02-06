@@ -1,22 +1,15 @@
 #include "bobaclient.hpp"
 
-using namespace bobaclient;
+#include "errors.hpp"
 
-CurlException::CurlException(std::string const &msg) {
-    this->msg = msg;
-}
-const char *CurlException::what() const noexcept {
-    return msg.c_str();
-}
-
-Bobaclient::Bobaclient() {
+bobaclient::Bobaclient::Bobaclient() {
     curl = curl_easy_init();
 }
-Bobaclient::~Bobaclient() {
+bobaclient::Bobaclient::~Bobaclient() {
     curl_easy_cleanup(curl);
 }
 
-types::InfoResponse Bobaclient::get_info(std::string const &url) {
+bobaclient::types::InfoResponse bobaclient::Bobaclient::get_info(std::string const &url) {
     std::string response;
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
@@ -26,7 +19,7 @@ types::InfoResponse Bobaclient::get_info(std::string const &url) {
     });
     const CURLcode res = curl_easy_perform(curl);
     if (res != CURLE_OK) {
-        throw CurlException(curl_easy_strerror(res));
+        throw errors::CurlException(curl_easy_strerror(res));
     }
 
     long code;

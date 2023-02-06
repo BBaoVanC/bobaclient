@@ -1,10 +1,9 @@
-#include <iostream>
-#include <string>
-
-#include "bobaclient.hpp"
 #include "main.hpp"
 
-using namespace cli;
+#include "bobaclient.hpp"
+
+#include <iostream>
+#include <string>
 
 int main() {
     // just a guard to run curl_global_init and curl_global_cleanup

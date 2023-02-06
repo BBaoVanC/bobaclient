@@ -1,5 +1,6 @@
 lib_srcs = [
   'bobaclient.cpp',
+  'errors.cpp',
 ]
 lib = library(
   'bobaclient',
