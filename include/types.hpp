@@ -13,13 +13,13 @@ namespace bobaclient::types {
         std::string direct_url;
         std::string filename;
         std::string mimetype;
-        //std::chrono::nanoseconds creation_date;
-        // TODO: these should not be std::chrono::nanoseconds, find an actual datetime type
-        int creation_date;
-        std::optional<std::chrono::nanoseconds> expiry_date;
+        std::chrono::time_point<std::chrono::system_clock> creation_date;
+        std::optional<std::chrono::time_point<std::chrono::system_clock>> expiry_date;
     };
 
     void from_json(const nlohmann::json &j, InfoResponse &r);
+    void from_json(const nlohmann::json &j, std::chrono::time_point<std::chrono::system_clock> &r);
+    void from_json(const nlohmann::json &j, std::optional<std::chrono::time_point<std::chrono::system_clock>> &r);
 }
 
 #endif

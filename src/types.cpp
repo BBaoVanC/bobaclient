@@ -13,6 +13,17 @@ void bobaclient::types::from_json(const nlohmann::json &j, bobaclient::types::In
     // TODO: give these real values
     //j.at("creation_date").get_to(r.creation_date);
     //j.at("expiry_date").get_to(r.expiry_date);
-    r.creation_date = 0;
-    r.expiry_date = std::nullopt;
+    //r.creation_date = 0;
+    //r.expiry_date = std::nullopt;
+}
+void bobaclient::types::from_json(const nlohmann::json &j, std::chrono::time_point<std::chrono::system_clock> &r) {
+    std::string val = j.get<std::string>();
+    val >> std::chrono::parse("%F%z", r);
+}
+void bobaclient::types::from_json(const nlohmann::json &j, std::chrono::time_point<std::chrono::system_clock> &r) {
+    if (j.is_null()) {
+        r = std::nullopt;
+    } else {
+        //r = j.get();
+    }
 }
