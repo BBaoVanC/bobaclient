@@ -3,6 +3,7 @@
 #include "curl.hpp"
 
 #include "bobaclient.hpp"
+#include <iostream>
 
 int main() {
     // just a guard to run curl_global_init and curl_global_cleanup

@@ -9,6 +9,7 @@ project(
 soversion = 0
 
 curl_dep = dependency('libcurl')
+json_dep = dependency('nlohmann_json')
 
 include = include_directories('include')
 

@@ -2,7 +2,10 @@
 
 #include "errors.hpp"
 
+#include <nlohmann/json.hpp>
 #include <curl/curl.h>
+
+using json = nlohmann::json;
 
 bobaclient::Bobaclient::Bobaclient() {
     curl = curl_easy_init();
@@ -26,11 +29,12 @@ bobaclient::types::InfoResponse bobaclient::Bobaclient::get_info(std::string con
 
     long code;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &code);
-    if (code != 200) {
-        // TODO
+    if (code > 299 || code < 200) {
+        throw errors::RequestException(response);
     }
 
-    // TODO
+    json data = json::parse(response);
+    return data.get<bobaclient::types::InfoResponse>();
 }
 
 // CurlResponse CurlWrapper::get_url(std::string const &url) {

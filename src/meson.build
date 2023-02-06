@@ -1,6 +1,7 @@
 lib_srcs = [
   'bobaclient.cpp',
   'errors.cpp',
+  'types.cpp',
 ]
 lib = library(
   'bobaclient',
@@ -19,7 +20,7 @@ executable(
   'bobaclient',
   cli_srcs,
   include_directories: include,
-  dependencies: [curl_dep],
+  dependencies: [curl_dep, json_dep],
   link_with: lib,
   install: true,
 )

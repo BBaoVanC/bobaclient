@@ -13,7 +13,11 @@ namespace bobaclient::errors {
     };
 
     class RequestException: public std::exception {
-        // TODO:
+    private:
+        std::string msg;
+    public:
+        RequestException(std::string const &msg);
+        const char *what() const noexcept;
     };
 }
 
