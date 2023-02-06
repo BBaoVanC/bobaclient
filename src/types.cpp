@@ -20,7 +20,7 @@ void bobaclient::types::from_json(const nlohmann::json &j, std::chrono::time_poi
     std::string val = j.get<std::string>();
     val >> std::chrono::parse("%F%z", r);
 }
-void bobaclient::types::from_json(const nlohmann::json &j, std::chrono::time_point<std::chrono::system_clock> &r) {
+void bobaclient::types::from_json(const nlohmann::json &j, std::optional<std::chrono::time_point<std::chrono::system_clock>> &r) {
     if (j.is_null()) {
         r = std::nullopt;
     } else {
