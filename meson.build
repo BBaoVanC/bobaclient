@@ -12,6 +12,13 @@ curl_dep = dependency('libcurl')
 
 include = include_directories('include')
 
+if get_option('buildtype').startswith('debug')
+  if meson.get_compiler('cpp').get_id() == 'clang'
+    # fix "error: summary string parsing error" in lldb
+    add_project_arguments('-fstandalone-debug', language: 'cpp')
+  endif
+endif
+
 subdir('include')
 subdir('src')
 #subdir('test')
