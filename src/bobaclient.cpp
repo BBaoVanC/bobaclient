@@ -7,34 +7,36 @@
 
 using json = nlohmann::json;
 
-bobaclient::Bobaclient::Bobaclient() {
-    curl = curl_easy_init();
-}
-bobaclient::Bobaclient::~Bobaclient() {
-    curl_easy_cleanup(curl);
-}
-
-bobaclient::types::InfoResponse bobaclient::Bobaclient::get_info(std::string const &url) {
-    std::string response;
-    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, +[](char *ptr, size_t size, size_t nmemb, std::string *resp) {
-        resp->append(ptr, size * nmemb);
-        return size * nmemb;
-    });
-    const CURLcode res = curl_easy_perform(curl);
-    if (res != CURLE_OK) {
-        throw errors::CurlException(curl_easy_strerror(res));
+namespace bobaclient {
+    Bobaclient::Bobaclient() {
+        curl = curl_easy_init();
+    }
+    Bobaclient::~Bobaclient() {
+        curl_easy_cleanup(curl);
     }
 
-    long code;
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &code);
-    if (code > 299 || code < 200) {
-        throw errors::RequestException(response);
-    }
+    types::InfoResponse Bobaclient::get_info(std::string const &url) {
+        std::string response;
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, +[](char *ptr, size_t size, size_t nmemb, std::string *resp) {
+            resp->append(ptr, size * nmemb);
+            return size * nmemb;
+        });
+        const CURLcode res = curl_easy_perform(curl);
+        if (res != CURLE_OK) {
+            throw errors::CurlException(curl_easy_strerror(res));
+        }
 
-    json data = json::parse(response);
-    return data.get<bobaclient::types::InfoResponse>();
+        long code;
+        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &code);
+        if (code > 299 || code < 200) {
+            throw errors::RequestException(response);
+        }
+
+        json data = json::parse(response);
+        return data.get<types::InfoResponse>();
+    }
 }
 
 // CurlResponse CurlWrapper::get_url(std::string const &url) {
