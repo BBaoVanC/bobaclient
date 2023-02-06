@@ -13,6 +13,7 @@ lib = library(
 
 cli_srcs = [
   'main.cpp',
+  'curl.cpp',
 ]
 executable(
   'bobaclient',

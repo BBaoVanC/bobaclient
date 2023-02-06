@@ -2,6 +2,8 @@
 
 #include "errors.hpp"
 
+#include <curl/curl.h>
+
 bobaclient::Bobaclient::Bobaclient() {
     curl = curl_easy_init();
 }

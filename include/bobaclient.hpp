@@ -4,7 +4,9 @@
 #include "types.hpp"
 
 #include <string>
-#include <curl/curl.h>
+
+// TODO: prevent htis from polluting global namespace
+typedef void CURL;
 
 namespace bobaclient {
     class Bobaclient {
