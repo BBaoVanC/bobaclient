@@ -14,7 +14,6 @@ namespace bobaclient {
         Bobaclient();
         ~Bobaclient();
 
-        // TODO: can these all be const functions
         InfoResponse get_info(std::string const &url);
     };
 }
