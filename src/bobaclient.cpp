@@ -10,6 +10,9 @@ using json = nlohmann::json;
 namespace bobaclient {
     Bobaclient::Bobaclient() {
         curl = curl_easy_init();
+        if (!curl) {
+            throw std::runtime_error("error creating libcurl easy handle");
+        }
     }
     Bobaclient::~Bobaclient() {
         curl_easy_cleanup(curl);
