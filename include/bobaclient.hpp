@@ -5,19 +5,17 @@
 
 #include <string>
 
-// TODO: prevent htis from polluting global namespace
-typedef void CURL;
-
 namespace bobaclient {
     class Bobaclient {
     private:
-        CURL *curl;
+        // this is actually CURL *
+        void *curl;
     public:
         Bobaclient();
         ~Bobaclient();
 
         // TODO: can these all be const functions
-        types::InfoResponse get_info(std::string const &url);
+        InfoResponse get_info(std::string const &url);
     };
 }
 

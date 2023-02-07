@@ -3,11 +3,11 @@
 #include <nlohmann/json.hpp>
 
 // TODO: get this working
-//namespace bobaclient::types {
+//namespace bobaclient {
 //    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(InfoResponse, id, url, direct_url, filename, mimetype, creation_date, expiry_date)
 //}
 
-namespace bobaclient::types {
+namespace bobaclient {
     void from_json(const nlohmann::json &j, InfoResponse &r) {
         j.at("id").get_to(r.id);
         j.at("url").get_to(r.url);

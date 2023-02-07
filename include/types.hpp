@@ -15,7 +15,7 @@ struct adl_serializer<std::optional<T>> {
 };
 NLOHMANN_JSON_NAMESPACE_END
 
-namespace bobaclient::types {
+namespace bobaclient {
     struct InfoResponse {
         std::string id;
         std::string url;

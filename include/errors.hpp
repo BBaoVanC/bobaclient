@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace bobaclient::errors {
+namespace bobaclient {
     class CurlException: public std::exception {
     private:
         std::string msg;

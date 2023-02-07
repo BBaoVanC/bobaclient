@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace bobaclient::errors {
+namespace bobaclient {
     CurlException::CurlException(std::string const &msg): msg(msg) {}
     const char *CurlException::what() const noexcept {
         return msg.c_str();

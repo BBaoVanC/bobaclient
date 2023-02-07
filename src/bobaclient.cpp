@@ -15,7 +15,7 @@ namespace bobaclient {
         curl_easy_cleanup(curl);
     }
 
-    types::InfoResponse Bobaclient::get_info(std::string const &url) {
+    InfoResponse Bobaclient::get_info(std::string const &url) {
         std::string response;
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
@@ -25,17 +25,17 @@ namespace bobaclient {
         });
         const CURLcode res = curl_easy_perform(curl);
         if (res != CURLE_OK) {
-            throw errors::CurlException(curl_easy_strerror(res));
+            throw CurlException(curl_easy_strerror(res));
         }
 
         long code;
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &code);
         if (code > 299 || code < 200) {
-            throw errors::RequestException(response);
+            throw RequestException(response);
         }
 
         json data = json::parse(response);
-        return data.get<types::InfoResponse>();
+        return data.get<InfoResponse>();
     }
 }
 
