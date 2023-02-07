@@ -1,6 +1,7 @@
 #include "bobaclient.hpp"
 
 #include "errors.hpp"
+#include "json.hpp"
 
 #include <nlohmann/json.hpp>
 #include <curl/curl.h>

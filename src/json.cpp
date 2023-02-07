@@ -1,3 +1,5 @@
+#include "json.hpp"
+
 #include "types.hpp"
 
 #include <nlohmann/json.hpp>
