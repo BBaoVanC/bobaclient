@@ -10,15 +10,9 @@
 #include <unordered_map>
 #include <getopt.h>
 
-// TODO: maybe replace this by making a logger class
-char *exec_name;
+typedef int (*ActionFunction)(Logger, int, char *const argv[]);
 
-const static struct option long_options[] = {
-};
-
-typedef int (*ActionFunction)(int, char *const argv[]);
-
-int action_info(int argc, char *const argv[]);
+int action_info(Logger logger, int argc, char *const argv[]);
 
 static std::unordered_map<std::string, ActionFunction> action_map = {
     { "info", action_info },
@@ -26,11 +20,11 @@ static std::unordered_map<std::string, ActionFunction> action_map = {
 
 int main(int argc, char *argv[]) {
     // zeroth arg is program name
-    exec_name = argv[0];
+    Logger logger(argv[0]);
     argv++; argc--;
 
     if (argc < 1) {
-        util::fail("argument `action` missing");
+        logger.fail("argument `action` missing");
         return 1;
     }
 
@@ -38,7 +32,7 @@ int main(int argc, char *argv[]) {
     const std::string action_str(argv[0]);
     argv++; argc--;
     if (action_map.count(action_str) < 1) {
-        util::fail("invalid action: " + action_str);
+        logger.fail("invalid action: " + action_str);
         return 1;
     }
     const ActionFunction action = action_map[action_str];
@@ -46,12 +40,12 @@ int main(int argc, char *argv[]) {
     // just a guard to run curl_global_init and curl_global_cleanup
     const CurlGlobalHandle _curl_global_handle;
 
-    return (*action)(argc, argv);
+    return (*action)(logger, argc, argv);
 }
 
-int action_info(int argc, char *const argv[]) {
+int action_info(Logger logger, int argc, char *const argv[]) {
     if (argc < 1) {
-        util::fail("argument `id` missing");
+        logger.fail("argument `id` missing");
         return 1;
     }
 
