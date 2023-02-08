@@ -2,8 +2,12 @@
 
 class Logger {
 public:
-    Logger(char *exec_name);
-    void fail(const std::string &str);
+    Logger(Logger &) = delete;
+    Logger & operator=(Logger) = delete;
+
+    Logger(const char *exec_name);
+
+    void fail(const std::string &str) const;
 private:
-    char *exec_name;
+    const char *exec_name;
 };

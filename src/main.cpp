@@ -1,4 +1,5 @@
 //#include "main.hpp"
+//TODO: mark more stuff const
 
 #include "curl.hpp"
 
@@ -10,14 +11,15 @@
 #include <unordered_map>
 #include <getopt.h>
 
-typedef int (*ActionFunction)(Logger, int, char *const argv[]);
+typedef int (*ActionFunction)(const Logger &, int, char *const argv[]);
 
-int action_info(Logger logger, int argc, char *const argv[]);
+int action_info(const Logger &logger, int argc, char *const argv[]);
 
 static std::unordered_map<std::string, ActionFunction> action_map = {
     { "info", action_info },
 };
 
+// XXX: test: https://share.boba.best/api/v1/info/PJpmMIw7
 int main(int argc, char *argv[]) {
     // zeroth arg is program name
     Logger logger(argv[0]);
@@ -43,7 +45,7 @@ int main(int argc, char *argv[]) {
     return (*action)(logger, argc, argv);
 }
 
-int action_info(Logger logger, int argc, char *const argv[]) {
+int action_info(const Logger &logger, int argc, char *const argv[]) {
     if (argc < 1) {
         logger.fail("argument `id` missing");
         return 1;
