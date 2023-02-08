@@ -1,3 +1,5 @@
+include_lib = include_directories('include')
+
 subdir('include')
 subdir('src')
 
