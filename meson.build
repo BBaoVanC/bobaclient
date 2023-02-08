@@ -11,7 +11,7 @@ soversion = 0
 curl_dep = dependency('libcurl')
 json_dep = dependency('nlohmann_json')
 
-include = include_directories('include')
+#include = include_directories('include')
 
 if get_option('buildtype').startswith('debug')
   if meson.get_compiler('cpp').get_id() == 'clang'
@@ -20,15 +20,6 @@ if get_option('buildtype').startswith('debug')
   endif
 endif
 
-subdir('include')
-subdir('src')
+subdir('lib')
+subdir('main')
 #subdir('test')
-
-pkg_mod = import('pkgconfig')
-pkg_mod.generate(
-  libraries: lib,
-  version: meson.project_version(),
-  name: 'bobaclient',
-  filebase: 'bobaclient',
-  description: 'Library to interact with bobashare',
-)
