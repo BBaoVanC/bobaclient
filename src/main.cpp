@@ -3,29 +3,34 @@
 #include "curl.hpp"
 
 #include "bobaclient.hpp"
+#include "log.hpp"
 
 #include <iostream>
+#include <string>
 #include <unordered_map>
 #include <getopt.h>
+
+// TODO: maybe replace this by making a logger class
+char *exec_name;
 
 const static struct option long_options[] = {
 };
 
-enum class Action {
-    Info,
-};
-static std::unordered_map<std::string, Action> action_map = {
-    { "info", Action::Info },
-};
+typedef int (*ActionFunction)(int, char *const argv[]);
 
-int action_info(bobaclient::Bobaclient &client, int argc, char *const argv[]);
+int action_info(int argc, char *const argv[]);
+
+static std::unordered_map<std::string, ActionFunction> action_map = {
+    { "info", action_info },
+};
 
 int main(int argc, char *argv[]) {
     // zeroth arg is program name
-    const static char *exec_name = argv[0];
+    exec_name = argv[0];
     argv++; argc--;
+
     if (argc < 1) {
-        std::cerr << exec_name << ": an argument is required" << std::endl;
+        util::fail("argument `action` missing");
         return 1;
     }
 
@@ -33,26 +38,27 @@ int main(int argc, char *argv[]) {
     const std::string action_str(argv[0]);
     argv++; argc--;
     if (action_map.count(action_str) < 1) {
-        std::cerr << exec_name << ": invalid action: " << action_str << std::endl;
+        util::fail("invalid action: " + action_str);
         return 1;
     }
-    const Action action = action_map[action_str];
+    const ActionFunction action = action_map[action_str];
 
     // just a guard to run curl_global_init and curl_global_cleanup
     const CurlGlobalHandle _curl_global_handle;
-    bobaclient::Bobaclient client;
 
-    switch (action) {
-        case Action::Info:
-            return action_info(client, argc, argv);
-    }
-
-    // shouldn't be reached
-    std::cerr << "this shouldn't be reached!" << std::endl;
-    return -1;
+    return (*action)(argc, argv);
 }
 
-int action_info(bobaclient::Bobaclient &client, int argc, char *const argv[]) {
-    const auto resp = client.get_info("https://share.boba.best/api/v1/info/PJpmMIw7");
+int action_info(int argc, char *const argv[]) {
+    if (argc < 1) {
+        util::fail("argument `id` missing");
+        return 1;
+    }
+
+    const std::string id(argv[0]);
+    argv++; argc--;
+
+    bobaclient::Bobaclient client;
+    const auto resp = client.get_info("https://share.boba.best/api/v1/info/" + id);
     return 0;
 }

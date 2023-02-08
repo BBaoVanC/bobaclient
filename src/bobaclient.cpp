@@ -35,6 +35,7 @@ namespace bobaclient {
         long code;
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &code);
         if (code > 299 || code < 200) {
+            // TODO: method to parse json errors
             throw RequestException(response);
         }
 
