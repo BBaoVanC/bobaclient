@@ -11,7 +11,7 @@ namespace bobaclient {
         // this is actually CURL *
         void *curl;
     public:
-        Bobaclient(Bobaclient &&o);
+        Bobaclient(const Bobaclient &) = delete;
         Bobaclient();
         ~Bobaclient();
 

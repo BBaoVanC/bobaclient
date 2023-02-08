@@ -15,7 +15,6 @@ namespace bobaclient {
             throw std::runtime_error("error creating libcurl easy handle");
         }
     }
-    Bobaclient::Bobaclient(Bobaclient &&o): curl(o.curl) {}
     Bobaclient::~Bobaclient() {
         curl_easy_cleanup(curl);
     }
