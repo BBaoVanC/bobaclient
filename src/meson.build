@@ -15,7 +15,6 @@ lib = library(
 cli_srcs = [
   'main.cpp',
   'curl.cpp',
-  'log.cpp',
 ]
 executable(
   'bobaclient',

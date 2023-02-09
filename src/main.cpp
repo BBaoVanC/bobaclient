@@ -8,23 +8,26 @@
 
 #include <iostream>
 #include <string>
-#include <unordered_map>
+#include <map>
 
 extern "C" {
     #include <getopt.h>
-    #include <string.h>
 }
 
-char *logger::exec_name;
-const char logger::usage[] = 
-    "Usage: bobaclient [options] command ...\n";
-const char help_main[] =
-    "Usage: bobaclient [options] command ...\n"
+static char *exec_name;
+static const char try_help_flag_message[] = "Use the '--help' option to display help page\n";
+static const char main_usage[] = "Usage: bobaclient [options] command ...\n";
+static const char main_help[] =
     "Options:\n"
     "  -h, --help\n"
     "Commands:\n"
     "  info     Get info about an upload\n"
 ;
+
+static int main_help_flag = 0;
+static const struct option main_long_options[] = {
+    { "help",   no_argument,    &main_help_flag,    1 },
+};
 
 typedef int (*CommandFunction)(int, char *argv[]);
 
@@ -38,26 +41,65 @@ static std::map<std::string, CommandFunction> command_map = {
 };
 
 int command_help(int argc, char *argv[]) {
-    std::clog << help_main << std::flush;
+    std::cerr << main_help;
     return 0;
 }
 
 // XXX: test: https://share.boba.best/api/v1/info/PJpmMIw7
 int main(int argc, char *argv[]) {
-    // zeroth arg is program name
-    logger::exec_name = argv[0];
-    argv++; argc--;
+    // store this so we can add it back later in subcommands
+    exec_name = argv[0];
 
-    if (argc < 1) {
-        logger::fail_usage("argument `command` missing");
+    bool exit_for_invalid_args = false;
+    while (true) {
+        int opt_idx = 0;
+        int c = getopt_long(argc, argv, "-h", main_long_options, &opt_idx);
+
+        if (c == -1) {
+            break;
+        }
+
+        switch (c) {
+            case -1:
+                // the loop will end after this
+                break;
+            case 0:
+                // do nothing else if flag was set
+                if (main_long_options[opt_idx].flag != 0) {
+                    break;
+                }
+            case 1:
+                // stop processing when we hit a non-option arg (subcommand)
+                goto argparse_end;
+            case '?':
+                exit_for_invalid_args = true;
+                break;
+            case 'h':
+                main_help_flag = 1;
+                break;
+            default:
+                std::cout << "abort" << std::endl;
+                abort();
+        }
+    }
+argparse_end:
+    if (exit_for_invalid_args) {
+        std::cerr << main_usage << try_help_flag_message;
+        return 1;
+    }
+    if (main_help_flag) {
+        std::cerr << main_usage << main_help;
+        return 0;
+    }
+
+    if (!(optind < argc - 1)) { // use optind here 
+        std::cerr << exec_name << ": no command provided\n" << main_usage;
         return 1;
     }
 
-    // first arg is the command to do
-    const std::string command_str(argv[0]);
-    argv++; argc--;
+    const std::string command_str(argv[optind - 1]); // optind was incremented past the command arg
     if (command_map.count(command_str) < 1) {
-        logger::fail_usage("invalid command: " + command_str);
+        std::cerr << exec_name << ": invalid command: " << command_str << "\n" << try_help_flag_message;
         return 1;
     }
     const CommandFunction command = command_map[command_str];
@@ -68,11 +110,9 @@ int main(int argc, char *argv[]) {
     return (*command)(argc, argv);
 }
 
-const char command_info_usage[] =
-    "Usage: bobaclient info [options]\n";
-const char command_info_help[] =
-    "Usage: bobaclient info [options]\n"
-    "  Get metadata about an upload\n"
+static const char command_info_usage[] = "Usage: bobaclient info [options] ID\n";
+static const char command_info_help[] =
+    "  Get metadata about an upload by its ID\n"
     "Options:\n"
     "  -h, --help\n"
     "  -r, --raw    Print the raw (JSON) response instead of pretty printing\n"
@@ -81,25 +121,16 @@ const char command_info_help[] =
 
 static int command_info_help_flag = 0;
 static int command_info_raw_flag = 0;
-static const struct option long_options[] = {
+static const struct option command_info_long_options[] = {
     { "help",   no_argument,        &command_info_help_flag,    1   },
     { "raw",    no_argument,        &command_info_raw_flag,     1   },
-    { 0, 0, 0, 0 }
 };
 
 int command_info(int argc, char *argv[]) {
-    if (argc < 1) {
-        logger::fail_usage("argument `id` missing", command_info_usage);
-        return 1;
-    }
-
-    // getopt will expect first arg to be program name, so we need it back
-    argv--; argc++;
-    argv[0] = logger::exec_name;
-
+    bool exit_for_invalid_args = false;
     while (true) {
         int opt_idx = 0;
-        int c = getopt_long(argc, argv, "hr", long_options, &opt_idx);
+        int c = getopt_long(argc, argv, "hr", command_info_long_options, &opt_idx);
 
         // end of options
         if (c == -1) {
@@ -114,7 +145,8 @@ int command_info(int argc, char *argv[]) {
                 std::cout << "case 1" << std::endl;
                 break;
             case '?':
-                // getopt already printed an error message
+                // getopt already prints an error message
+                exit_for_invalid_args = true;
                 break;
             case 'h':
                 command_info_help_flag = 1;
@@ -126,16 +158,22 @@ int command_info(int argc, char *argv[]) {
                 abort();
         }
     }
-
+    if (exit_for_invalid_args) {
+        std::cerr << command_info_usage << try_help_flag_message;
+        return 1;
+    }
     if (command_info_help_flag) {
-        std::clog << command_info_help << std::flush;
+        std::cerr << command_info_usage << command_info_help;
         return 0;
     }
 
-    return 10;
+    int id_idx = optind; // was not incremented because we're not adding '-' to beginning of option string
+    if (!(id_idx < argc)) {
+        std::cerr << exec_name << ": missing ID argument\n";
+        return 1;
+    }
 
-    const std::string id(argv[0]);
-    argv++; argc--;
+    const std::string id(argv[id_idx]);
 
     bobaclient::Bobaclient client;
     const auto resp = client.get_info("https://share.boba.best/api/v1/info/" + id);
