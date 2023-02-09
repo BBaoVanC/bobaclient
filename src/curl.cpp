@@ -1,7 +1,10 @@
 #include "curl.hpp"
 
 #include <iostream>
-#include <curl/curl.h>
+
+extern "C" {
+    #include <curl/curl.h>
+}
 
 CurlGlobalHandle::CurlGlobalHandle() {
     CURLcode res = curl_global_init(CURL_GLOBAL_ALL);

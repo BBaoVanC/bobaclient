@@ -1,11 +1,11 @@
 project(
-  'bobaclient',
-  'cpp',
+  'bobaclient', 'cpp',
   version: '0.1.0',
   license: 'MIT',
   default_options: ['cpp_std=c++17'],
 )
 
+# TODO: get this from version, major.minor
 soversion = 0
 
 curl_dep = dependency('libcurl')

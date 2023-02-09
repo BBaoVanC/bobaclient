@@ -1,13 +1,8 @@
 #include <iostream>
+#include <string>
 
-class Logger {
-public:
-    Logger(Logger &) = delete;
-    Logger & operator=(Logger) = delete;
-
-    Logger(const char *exec_name);
-
-    void fail(const std::string &str) const;
-private:
-    const char *exec_name;
-};
+namespace logger {
+    extern char *exec_name;
+    extern const char usage[];
+    void fail_cli(const std::string &str);
+}

@@ -4,7 +4,10 @@
 #include "json.hpp"
 
 #include <nlohmann/json.hpp>
-#include <curl/curl.h>
+
+extern "C" {
+    #include <curl/curl.h>
+}
 
 using json = nlohmann::json;
 

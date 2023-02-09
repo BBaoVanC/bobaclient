@@ -9,45 +9,65 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
-#include <getopt.h>
 
-typedef int (*ActionFunction)(const Logger &, int, char *const argv[]);
+extern "C" {
+    #include <getopt.h>
+}
 
-int action_info(const Logger &logger, int argc, char *const argv[]);
+char *logger::exec_name;
+const char logger::usage[] = 
+    "Usage: bobaclient [options] command [-h | --help] ...\n"
+    "Options:\n"
+    "  -h, --help\n"
+    "Commands:\n"
+    "  info     Get info about an upload\n"
+;
 
-static std::unordered_map<std::string, ActionFunction> action_map = {
-    { "info", action_info },
+typedef int (*CommandFunction)(int, char *const argv[]);
+
+int command_help(int argc, char *const argv[]);
+int command_info(int argc, char *const argv[]);
+
+static std::unordered_map<std::string, CommandFunction> command_map = {
+    { "--help", command_help },
+    { "-h",     command_help },
+    { "info",   command_info },
 };
 
 // XXX: test: https://share.boba.best/api/v1/info/PJpmMIw7
 int main(int argc, char *argv[]) {
     // zeroth arg is program name
-    Logger logger(argv[0]);
+    logger::exec_name = argv[0];
     argv++; argc--;
 
     if (argc < 1) {
-        logger.fail("argument `action` missing");
+        logger::fail_cli("argument `command` missing");
         return 1;
     }
 
-    // first arg is the action to do
-    const std::string action_str(argv[0]);
+    // first arg is the command to do
+    const std::string command_str(argv[0]);
     argv++; argc--;
-    if (action_map.count(action_str) < 1) {
-        logger.fail("invalid action: " + action_str);
+    if (command_map.count(command_str) < 1) {
+        logger::fail_cli("invalid command: " + command_str);
         return 1;
     }
-    const ActionFunction action = action_map[action_str];
+    const CommandFunction command = command_map[command_str];
 
     // just a guard to run curl_global_init and curl_global_cleanup
     const CurlGlobalHandle _curl_global_handle;
 
-    return (*action)(logger, argc, argv);
+    return (*command)(argc, argv);
 }
 
-int action_info(const Logger &logger, int argc, char *const argv[]) {
+int command_help(int argc, char *const argv[]) {
+    std::clog << logger::usage << std::flush;
+    return 0;
+}
+
+int command_info(int argc, char *const argv[]) {
     if (argc < 1) {
-        logger.fail("argument `id` missing");
+        logger::fail_cli("argument `id` missing");
         return 1;
     }
 
