@@ -26,18 +26,18 @@ const char help_main[] =
     "  info     Get info about an upload\n"
 ;
 
-typedef int (*CommandFunction)(int, char *const argv[]);
+typedef int (*CommandFunction)(int, char *argv[]);
 
-int command_help(int argc, char *const argv[]);
-int command_info(int argc, char *const argv[]);
+int command_help(int argc, char *argv[]);
+int command_info(int argc, char *argv[]);
 
-static std::unordered_map<std::string, CommandFunction> command_map = {
+static std::map<std::string, CommandFunction> command_map = {
     { "--help", command_help },
     { "-h",     command_help },
     { "info",   command_info },
 };
 
-int command_help(int argc, char *const argv[]) {
+int command_help(int argc, char *argv[]) {
     std::clog << help_main << std::flush;
     return 0;
 }
@@ -68,35 +68,38 @@ int main(int argc, char *argv[]) {
     return (*command)(argc, argv);
 }
 
-const char usage_info[] =
+const char command_info_usage[] =
     "Usage: bobaclient info [options]\n";
-const char help_info[] =
+const char command_info_help[] =
     "Usage: bobaclient info [options]\n"
     "  Get metadata about an upload\n"
     "Options:\n"
     "  -h, --help\n"
     "  -r, --raw    Print the raw (JSON) response instead of pretty printing\n"
-    "  -i, --id     Set the id of the upload to get info about\n"
+    "  -i, --id     Set id of upload to look up info about\n"
 ;
 
-static int help_info_flag = 0;
-
+static int command_info_help_flag = 0;
+static int command_info_raw_flag = 0;
 static const struct option long_options[] = {
-    { "help",   no_argument,        &help_info_flag,    1   },
-    { "raw",    no_argument,        nullptr,           'r' },
-    { "id",     required_argument,  nullptr,            'i' },
+    { "help",   no_argument,        &command_info_help_flag,    1   },
+    { "raw",    no_argument,        &command_info_raw_flag,     1   },
+    { 0, 0, 0, 0 }
 };
 
-int command_info(int argc, char *const argv[]) {
+int command_info(int argc, char *argv[]) {
     if (argc < 1) {
-        logger::fail_usage("argument `id` missing", usage_info);
+        logger::fail_usage("argument `id` missing", command_info_usage);
         return 1;
     }
 
-    int c;
+    // getopt will expect first arg to be program name, so we need it back
+    argv--; argc++;
+    argv[0] = logger::exec_name;
+
     while (true) {
         int opt_idx = 0;
-        c = getopt_long(argc, argv, "hri:", long_options, &opt_idx);
+        int c = getopt_long(argc, argv, "hr", long_options, &opt_idx);
 
         // end of options
         if (c == -1) {
@@ -111,21 +114,21 @@ int command_info(int argc, char *const argv[]) {
                 std::cout << "case 1" << std::endl;
                 break;
             case '?':
-                std::cout << "case '?'" << std::endl;
+                // getopt already printed an error message
+                break;
             case 'h':
-                std::cout << "case 'h'" << std::endl;
+                command_info_help_flag = 1;
+                break;
             case 'r':
-                std::cout << "case 'r'" << std::endl;
-            case 'i':
-                std::cout << "case 'i'" << std::endl;
-                std::cout << optarg << std::endl;
+                command_info_raw_flag = 1;
+                break;
             default:
                 abort();
         }
     }
 
-    if (help_info_flag) {
-        std::clog << help_info << std::flush;
+    if (command_info_help_flag) {
+        std::clog << command_info_help << std::flush;
         return 0;
     }
 
