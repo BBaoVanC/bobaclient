@@ -2,10 +2,11 @@
 
 namespace logger {
     // used for error message with wrong args to the CLI
-    // TODO: figure out how to extend this to work with commmands
-    //       (maybe take usage as parameter?)
-    void fail_cli(const std::string &msg) {
-        std::clog << exec_name << ": " << msg << "\n";
-        std::clog << usage << std::flush; // newline already included in usage string
+    void fail_usage(const std::string &msg) {
+        // flush because newline already in string
+        std::clog << exec_name << ": " << msg << "\n" << usage << std::flush;
+    }
+    void fail_usage(const std::string &msg, const std::string &usage) {
+        std::clog << exec_name << ": " << msg << "\n" << usage << std::flush;
     }
 }
