@@ -20,8 +20,6 @@ namespace bobaclient {
         BobashareException(const std::string &msg);
         BobashareException(const std::string &msg, nlohmann::json backtrace);
         const std::optional<nlohmann::json> backtrace() const noexcept;
-
-        friend void from_json(const nlohmann::json &j, BobashareException &e);
     };
 }
 

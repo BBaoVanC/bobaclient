@@ -39,7 +39,6 @@ NLOHMANN_JSON_NAMESPACE_END
 
 namespace bobaclient {
     void from_json(const nlohmann::json &j, InfoResponse &r);
-    void from_json(const nlohmann::json &j, BobashareException &e);
 }
 
 #endif
