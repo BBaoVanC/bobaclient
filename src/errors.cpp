@@ -2,6 +2,7 @@
 
 #include <nlohmann/json.hpp>
 #include <string>
+#include <optional>
 
 namespace bobaclient {
     CurlException::CurlException(std::string const &msg): std::runtime_error(msg) {}

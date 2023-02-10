@@ -40,7 +40,7 @@ namespace bobaclient {
         json data;
         try {
             data = json::parse(response);
-        } catch (json::exception e) {
+        } catch (const json::exception &e) {
             // TODO: this should be a different class, then error doesnt need to be optional
             throw BobashareException(e.what());
         }

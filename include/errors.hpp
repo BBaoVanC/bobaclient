@@ -4,6 +4,7 @@
 #include <nlohmann/json.hpp>
 
 #include <string>
+#include <optional>
 
 namespace bobaclient {
     class CurlException: public std::runtime_error {

@@ -25,6 +25,7 @@ static const char main_help[] =
 static int main_help_flag = 0;
 static const struct option main_long_options[] = {
     { "help",   no_argument,    &main_help_flag,    1 },
+    { 0, 0, 0, 0 }
 };
 
 typedef int (*CommandFunction)(int, char *argv[]);
@@ -51,7 +52,7 @@ int main(int argc, char *argv[]) {
     bool exit_for_invalid_args = false;
     int opt_idx = 0;
     int c;
-    while ((c = getopt_long(argc, argv, "-h", main_long_options, &opt_idx)) != -1) {
+    while ((c = getopt_long(argc, argv, "+h", main_long_options, &opt_idx)) != -1) {
 
         switch (c) {
             case -1:
@@ -62,9 +63,6 @@ int main(int argc, char *argv[]) {
                 if (main_long_options[opt_idx].flag != 0) {
                     break;
                 }
-            case 1:
-                // stop processing when we hit a non-option arg (subcommand)
-                goto argparse_end;
             case '?':
                 exit_for_invalid_args = true;
                 break;
@@ -76,7 +74,6 @@ int main(int argc, char *argv[]) {
                 abort();
         }
     }
-argparse_end:
     if (exit_for_invalid_args) {
         std::cerr << main_usage << try_help_flag_message;
         return 1;
@@ -86,13 +83,12 @@ argparse_end:
         return 0;
     }
 
-    int cmd_idx = optind - 1; // optind points past the non-flag arg (command) -- behavior changed because of '-' in front of the short args string
-    if (cmd_idx == 0 || cmd_idx >= argc) {
+    if (optind >= argc) { // if index of last arg < index where getopt stopped (end of args, or first non-flag)
         std::cerr << exec_name << ": no command provided\n" << main_usage << try_help_flag_message;
         return 1;
     }
 
-    const std::string command_str(argv[cmd_idx]);
+    const std::string command_str(argv[optind]);
     if (command_map.count(command_str) < 1) {
         std::cerr << exec_name << ": invalid command: " << command_str << "\n" << main_usage << try_help_flag_message;
         return 1;
@@ -102,6 +98,7 @@ argparse_end:
     // just a guard to run curl_global_init and curl_global_cleanup
     const CurlGlobalHandle _curl_global_handle;
 
+    optind++; // move past the command arg
     return (*command)(argc, argv);
 }
 
@@ -119,19 +116,14 @@ static int command_info_raw_flag = 0;
 static const struct option command_info_long_options[] = {
     { "help",   no_argument,        &command_info_help_flag,    1   },
     { "raw",    no_argument,        &command_info_raw_flag,     1   },
+    { 0, 0, 0, 0 }
 };
 
 int command_info(int argc, char *argv[]) {
     bool exit_for_invalid_args = false;
-    while (true) {
-        int opt_idx = 0;
-        int c = getopt_long(argc, argv, "hr", command_info_long_options, &opt_idx);
-
-        // end of options
-        if (c == -1) {
-            break;
-        }
-
+    int opt_idx = 0;
+    int c;
+    while ((c = getopt_long(argc, argv, "hr", command_info_long_options, &opt_idx)) != -1) {
         switch (c) {
             case 0:
                 std::cout << "case 0" << std::endl;
@@ -160,7 +152,7 @@ int command_info(int argc, char *argv[]) {
     }
 
     int id_idx = optind;
-    if (!(id_idx < argc)) {
+    if (id_idx >= argc) {
         std::cerr << exec_name << ": missing ID argument\n";
         return 1;
     }
