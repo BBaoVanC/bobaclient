@@ -5,6 +5,7 @@
 #include <string>
 #include <chrono>
 #include <optional>
+#include <iostream>
 
 namespace bobaclient {
     struct InfoResponse {
@@ -16,6 +17,8 @@ namespace bobaclient {
         // ISO 8601 format
         std::string creation_date;
         std::optional<std::string> expiry_date;
+
+        std::ostream & operator<<(std::ostream &os) const;
     };
 }
 
