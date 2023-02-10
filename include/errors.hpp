@@ -1,6 +1,8 @@
 #ifndef BOBACLIENT_ERRORS_HPP
 #define BOBACLIENT_ERRORS_HPP
 
+#include <nlohmann/json.hpp>
+
 #include <string>
 
 namespace bobaclient {
@@ -13,10 +15,10 @@ namespace bobaclient {
     };
 
     class RequestException: public std::exception {
-    private:
-        std::string msg;
     public:
-        RequestException(std::string const &msg);
+        std::string message;
+        std::optional<nlohmann::json> error = std::nullopt;
+        //RequestException(const std::string &msg);
         const char *what() const noexcept;
     };
 }

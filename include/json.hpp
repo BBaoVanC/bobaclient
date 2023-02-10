@@ -1,6 +1,7 @@
 #ifndef BOBACLIENT_JSON_HPP
 #define BOBACLIENT_JSON_HPP
 
+#include "errors.hpp"
 #include "types.hpp"
 
 #include <nlohmann/json.hpp>
@@ -17,6 +18,7 @@ NLOHMANN_JSON_NAMESPACE_END
 
 namespace bobaclient {
     void from_json(const nlohmann::json &j, InfoResponse &r);
+    void from_json(const nlohmann::json &j, RequestException &e);
 }
 
 #endif

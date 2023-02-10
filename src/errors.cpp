@@ -8,8 +8,8 @@ namespace bobaclient {
         return msg.c_str();
     }
 
-    RequestException::RequestException(std::string const &msg): msg(msg) {}
+    //RequestException::RequestException(std::string const &msg): msg(msg) {}
     const char *RequestException::what() const noexcept {
-        return msg.c_str();
+        return message.c_str();
     }
 }

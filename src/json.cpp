@@ -1,5 +1,6 @@
 #include "json.hpp"
 
+#include "errors.hpp"
 #include "types.hpp"
 
 #include <nlohmann/json.hpp>
@@ -18,6 +19,10 @@ namespace bobaclient {
         j.at("mimetype").get_to(r.mimetype);
         j.at("creation_date").get_to(r.creation_date);
         j.at("expiry_date").get_to(r.expiry_date);
+    }
+    void from_json(const nlohmann::json &j, RequestException &e) {
+        j.at("message").get_to(e.message);
+        j.at("error").get_to(e.error);
     }
 }
 

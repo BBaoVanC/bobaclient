@@ -1,10 +1,8 @@
-//#include "main.hpp"
 //TODO: mark more stuff const
 
 #include "curl.hpp"
 
 #include "bobaclient.hpp"
-#include "log.hpp"
 
 #include <iostream>
 #include <string>
@@ -88,13 +86,13 @@ argparse_end:
         return 0;
     }
 
-    int cmd_idx = optind - 1;
+    int cmd_idx = optind - 1; // optind points past the non-flag arg (command) -- behavior changed because of '-' in front of the short args string
     if (cmd_idx == 0 || cmd_idx >= argc) {
         std::cerr << exec_name << ": no command provided\n" << main_usage << try_help_flag_message;
         return 1;
     }
 
-    const std::string command_str(argv[cmd_idx]); // optind was incremented past the command arg
+    const std::string command_str(argv[cmd_idx]);
     if (command_map.count(command_str) < 1) {
         std::cerr << exec_name << ": invalid command: " << command_str << "\n" << main_usage << try_help_flag_message;
         return 1;
@@ -138,9 +136,6 @@ int command_info(int argc, char *argv[]) {
             case 0:
                 std::cout << "case 0" << std::endl;
                 break;
-            case 1:
-                std::cout << "case 1" << std::endl;
-                break;
             case '?':
                 // getopt already prints an error message
                 exit_for_invalid_args = true;
@@ -164,14 +159,13 @@ int command_info(int argc, char *argv[]) {
         return 0;
     }
 
-    int id_idx = optind; // was not incremented because we're not adding '-' to beginning of option string
+    int id_idx = optind;
     if (!(id_idx < argc)) {
         std::cerr << exec_name << ": missing ID argument\n";
         return 1;
     }
 
     const std::string id(argv[id_idx]);
-
     bobaclient::Bobaclient client;
     const auto resp = client.get_info("https://share.boba.best/api/v1/info/" + id);
     return 0;
