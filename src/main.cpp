@@ -51,13 +51,9 @@ int main(int argc, char *argv[]) {
     exec_name = argv[0];
 
     bool exit_for_invalid_args = false;
-    while (true) {
-        int opt_idx = 0;
-        int c = getopt_long(argc, argv, "-h", main_long_options, &opt_idx);
-
-        if (c == -1) {
-            break;
-        }
+    int opt_idx = 0;
+    int c;
+    while ((c = getopt_long(argc, argv, "-h", main_long_options, &opt_idx)) != -1) {
 
         switch (c) {
             case -1:
@@ -92,14 +88,15 @@ argparse_end:
         return 0;
     }
 
-    if (!(optind < argc - 1)) { // use optind here 
-        std::cerr << exec_name << ": no command provided\n" << main_usage;
+    int cmd_idx = optind - 1;
+    if (cmd_idx == 0 || cmd_idx >= argc) {
+        std::cerr << exec_name << ": no command provided\n" << main_usage << try_help_flag_message;
         return 1;
     }
 
-    const std::string command_str(argv[optind - 1]); // optind was incremented past the command arg
+    const std::string command_str(argv[cmd_idx]); // optind was incremented past the command arg
     if (command_map.count(command_str) < 1) {
-        std::cerr << exec_name << ": invalid command: " << command_str << "\n" << try_help_flag_message;
+        std::cerr << exec_name << ": invalid command: " << command_str << "\n" << main_usage << try_help_flag_message;
         return 1;
     }
     const CommandFunction command = command_map[command_str];
