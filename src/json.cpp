@@ -23,11 +23,11 @@ namespace bobaclient {
         j.at("expiry_date").get_to(r.expiry_date);
     }
     void from_json(const json &j, BobashareException &e) {
-        j.at("message").get_to(e.message);
-        j.at("error").get_to(e.error);
+        e = BobashareException(j.at("message").get<std::string>(), j.at("error"));
     }
 }
 
+// TODO: maybe move this into header even though it somehow magically works here
 NLOHMANN_JSON_NAMESPACE_BEGIN
 // no static: see https://stackoverflow.com/a/31305772
 template <typename T>

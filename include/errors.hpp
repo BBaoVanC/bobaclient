@@ -12,14 +12,13 @@ namespace bobaclient {
     };
 
     // error response from bobashare server
-    class BobashareException: public std::exception {
+    class BobashareException: public std::runtime_error {
     private:
-        std::string message;
         std::optional<nlohmann::json> error = std::nullopt;
     public:
-        BobashareException() = default;
+        // TODO: https://json.nlohmann.me/features/arbitrary_types/#how-can-i-use-get-for-non-default-constructiblenon-copyable-types
         BobashareException(const std::string &msg);
-        const char *what() const noexcept;
+        BobashareException(const std::string &msg, nlohmann::json backtrace);
         const std::optional<nlohmann::json> backtrace() const noexcept;
 
         friend void from_json(const nlohmann::json &j, BobashareException &e);
