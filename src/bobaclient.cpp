@@ -41,11 +41,12 @@ namespace bobaclient {
         try {
             data = json::parse(response);
         } catch (json::exception e) {
-            throw RequestException(e.what());
+            // TODO: this should be a different class, then error doesnt need to be optional
+            throw BobashareException(e.what());
         }
 
         if (code > 299 || code < 200) {
-            throw data.get<RequestException>();
+            throw data.get<BobashareException>();
         }
         return data.get<InfoResponse>();
     }

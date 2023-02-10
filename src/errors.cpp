@@ -3,16 +3,13 @@
 #include <string>
 
 namespace bobaclient {
-    CurlException::CurlException(std::string const &msg): msg(msg) {}
-    const char *CurlException::what() const noexcept {
-        return msg.c_str();
-    }
+    CurlException::CurlException(std::string const &msg): std::runtime_error(msg) {}
 
-    RequestException::RequestException(std::string const &msg): message(msg) {}
-    const char *RequestException::what() const noexcept {
+    BobashareException::BobashareException(std::string const &msg): message(msg) {}
+    const char *BobashareException::what() const noexcept {
         return message.c_str();
     }
-    const std::optional<nlohmann::json> RequestException::backtrace() const noexcept {
+    const std::optional<nlohmann::json> BobashareException::backtrace() const noexcept {
         return error;
     }
 }

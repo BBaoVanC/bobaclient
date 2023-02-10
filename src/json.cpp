@@ -5,13 +5,15 @@
 
 #include <nlohmann/json.hpp>
 
+using json = nlohmann::json;
+
 // TODO: get this working
 //namespace bobaclient {
 //    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(InfoResponse, id, url, direct_url, filename, mimetype, creation_date, expiry_date)
 //}
 
 namespace bobaclient {
-    void from_json(const nlohmann::json &j, InfoResponse &r) {
+    void from_json(const json &j, InfoResponse &r) {
         j.at("id").get_to(r.id);
         j.at("url").get_to(r.url);
         j.at("direct_url").get_to(r.direct_url);
@@ -20,7 +22,7 @@ namespace bobaclient {
         j.at("creation_date").get_to(r.creation_date);
         j.at("expiry_date").get_to(r.expiry_date);
     }
-    void from_json(const nlohmann::json &j, RequestException &e) {
+    void from_json(const json &j, BobashareException &e) {
         j.at("message").get_to(e.message);
         j.at("error").get_to(e.error);
     }
@@ -29,7 +31,7 @@ namespace bobaclient {
 NLOHMANN_JSON_NAMESPACE_BEGIN
 // no static: see https://stackoverflow.com/a/31305772
 template <typename T>
-void adl_serializer<std::optional<T>>::to_json(nlohmann::json &j, const std::optional<T> &opt) {
+void adl_serializer<std::optional<T>>::to_json(json &j, const std::optional<T> &opt) {
     if (opt == std::nullopt) {
         j = nullptr;
     } else {
@@ -38,7 +40,7 @@ void adl_serializer<std::optional<T>>::to_json(nlohmann::json &j, const std::opt
     }
 }
 template <typename T>
-void adl_serializer<std::optional<T>>::from_json(const nlohmann::json &j, std::optional<T> &opt) {
+void adl_serializer<std::optional<T>>::from_json(const json &j, std::optional<T> &opt) {
     if (j.is_null()) {
         opt = std::nullopt;
     } else {
