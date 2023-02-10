@@ -41,9 +41,9 @@ namespace bobaclient {
         try {
             data = json::parse(response);
         } catch (json::exception e) {
-            // TODO: fix
             throw RequestException(e.what());
         }
+
         if (code > 299 || code < 200) {
             throw data.get<RequestException>();
         }

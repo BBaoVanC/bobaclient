@@ -15,11 +15,16 @@ namespace bobaclient {
     };
 
     class RequestException: public std::exception {
-    public:
+    private:
         std::string message;
         std::optional<nlohmann::json> error = std::nullopt;
-        //RequestException(const std::string &msg);
+    public:
+        RequestException() = default;
+        RequestException(const std::string &msg);
         const char *what() const noexcept;
+        const std::optional<nlohmann::json> backtrace() const noexcept;
+
+        friend void from_json(const nlohmann::json &j, RequestException &e);
     };
 }
 
