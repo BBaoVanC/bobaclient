@@ -1,6 +1,6 @@
-#include "json.hpp"
+#include <bobaclient/json.hpp>
 
-#include "types.hpp"
+#include <bobaclient/types.hpp>
 
 #include <nlohmann/json.hpp>
 

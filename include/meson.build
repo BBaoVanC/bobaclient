@@ -1,4 +1,7 @@
 install_headers(
-    'bobaclient.hpp',
+    'bobaclient/bobaclient.hpp',
+    'bobaclient/errors.hpp',
+    'bobaclient/json.hpp',
+    'bobaclient/types.hpp',
     subdir: 'bobaclient',
 )

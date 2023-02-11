@@ -1,7 +1,7 @@
-#include "bobaclient.hpp"
+#include <bobaclient/bobaclient.hpp>
 
-#include "errors.hpp"
-#include "json.hpp"
+#include <bobaclient/errors.hpp>
+#include <bobaclient/json.hpp>
 
 #include <nlohmann/json.hpp>
 

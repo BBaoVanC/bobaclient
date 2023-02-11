@@ -2,7 +2,7 @@
 
 #include "curl.hpp"
 
-#include "bobaclient.hpp"
+#include <bobaclient/bobaclient.hpp>
 
 #include <iostream>
 #include <string>

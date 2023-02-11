@@ -1,4 +1,4 @@
-#include "errors.hpp"
+#include <bobaclient/errors.hpp>
 
 #include <nlohmann/json.hpp>
 #include <string>
