@@ -1,5 +1,6 @@
 lib_srcs = [
   'bobaclient/bobaclient.cpp',
+  'bobaclient/display.cpp',
   'bobaclient/errors.cpp',
   'bobaclient/json.cpp',
   'bobaclient/types.cpp',

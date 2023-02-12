@@ -159,6 +159,11 @@ int command_info(int argc, char *argv[]) {
 
     const std::string id(argv[id_idx]);
     bobaclient::Bobaclient client;
-    const auto resp = client.get_info("https://share.boba.best/api/v1/info/" + id);
+    const bobaclient::InfoResponse resp = client.get_info(id);
+
+    if (command_info_raw_flag) {
+        std::cout << resp << std::endl;
+    }
+
     return 0;
 }

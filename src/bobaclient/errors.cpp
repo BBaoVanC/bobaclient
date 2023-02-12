@@ -4,12 +4,14 @@
 #include <string>
 #include <optional>
 
-namespace bobaclient {
-    CurlException::CurlException(std::string const &msg): std::runtime_error(msg) {}
+using json = nlohmann::json;
 
-    BobashareException::BobashareException(std::string const &msg): std::runtime_error(msg) {}
-    BobashareException::BobashareException(std::string const &msg, nlohmann::json backtrace): std::runtime_error(msg), error(backtrace) {}
-    const std::optional<nlohmann::json> BobashareException::backtrace() const noexcept {
+namespace bobaclient {
+    CurlException::CurlException(const std::string &msg): std::runtime_error(msg) {}
+
+    BobashareException::BobashareException(const std::string &msg): std::runtime_error(msg) {}
+    BobashareException::BobashareException(const std::string &msg, json backtrace): std::runtime_error(msg), error(backtrace) {}
+    const std::optional<json> BobashareException::backtrace() const noexcept {
         return error;
     }
 }

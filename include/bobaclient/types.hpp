@@ -18,7 +18,7 @@ namespace bobaclient {
         std::string creation_date;
         std::optional<std::string> expiry_date;
 
-        std::ostream & operator<<(std::ostream &os) const;
+        //std::ostream & operator<<(std::ostream &os) const;
     };
 }
 

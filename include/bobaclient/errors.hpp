@@ -9,7 +9,7 @@
 namespace bobaclient {
     class CurlException: public std::runtime_error {
     public:
-        CurlException(std::string const &msg);
+        CurlException(const std::string &msg);
     };
 
     // error response from bobashare server

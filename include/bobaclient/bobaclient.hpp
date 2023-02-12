@@ -5,11 +5,15 @@
 
 #include <string>
 
+
 namespace bobaclient {
     class Bobaclient {
     private:
         // this is actually CURL *
         void *curl;
+
+        // helper to make a GET request and get the entire body into string
+        std::string get_url(const std::string &url);
     public:
         Bobaclient(const Bobaclient &) = delete;
         Bobaclient & operator=(Bobaclient) = delete;
@@ -17,7 +21,7 @@ namespace bobaclient {
         Bobaclient();
         ~Bobaclient();
 
-        InfoResponse get_info(std::string const &url);
+        InfoResponse get_info(const std::string &url);
     };
 }
 
