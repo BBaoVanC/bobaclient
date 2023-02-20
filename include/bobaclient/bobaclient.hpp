@@ -16,7 +16,7 @@ namespace bobaclient {
         std::string get_url(const std::string &url);
     public:
         Bobaclient(const Bobaclient &) = delete;
-        Bobaclient & operator=(Bobaclient) = delete;
+        Bobaclient &operator=(Bobaclient) = delete;
 
         Bobaclient();
         ~Bobaclient();
