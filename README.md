@@ -1,5 +1,7 @@
 # bobaclient
 
+**This program is unfinished and not ready for use.**
+
 Official client for bobashare
 
 ## Layout
